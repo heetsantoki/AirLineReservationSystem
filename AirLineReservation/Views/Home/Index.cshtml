@@ -1,0 +1,106 @@
+﻿@model AirLineReservation.ViewModel.FlightSearchViewModel
+
+
+@{
+    ViewData["Title"] = "Find Your Next Flight";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Find Your Next Flight</h1>
+    <p>Book your flights with SkyBooking. Fast, easy, and reliable.</p>
+</div>
+
+<div class="row justify-content-center mt-4">
+    <div class="col-md-8">
+        <div class="card p-4 shadow-sm">
+            <h3>Search for a Flight</h3>
+            <form asp-action="Index" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="row">
+                    <div class="col-md-6 form-group">
+                        <label asp-for="DepartureAirportIATA" class="control-label"></label>
+                        <input asp-for="DepartureAirportIATA" class="form-control" placeholder="e.g. JFK" />
+                        <span asp-validation-for="DepartureAirportIATA" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label asp-for="ArrivalAirportIATA" class="control-label"></label>
+                        <input asp-for="ArrivalAirportIATA" class="form-control" placeholder="e.g. LHR" />
+                        <span asp-validation-for="ArrivalAirportIATA" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-6 form-group">
+                        <label asp-for="DepartureDate" class="control-label"></label>
+                        <input asp-for="DepartureDate" type="date" class="form-control" />
+                        <span asp-validation-for="DepartureDate" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label asp-for="NumberOfPassengers" class="control-label"></label>
+                        <input asp-for="NumberOfPassengers" type="number" min="1" max="9" class="form-control" />
+                        <span asp-validation-for="NumberOfPassengers" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group text-center mt-4">
+                    <button type="submit" class="btn btn-primary btn-lg">Search Flights</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@if (Model.SearchResults != null && Model.SearchResults.Any())
+{
+    <h2 class="mt-5 mb-3 text-center">Available Flights</h2>
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            @foreach (var flight in Model.SearchResults)
+            {
+                <div class="card mb-3 p-3 shadow-sm">
+                    <div class="row align-items-center">
+                        <div class="col-md-2 text-center">
+                            <strong>@flight.Airline</strong>
+                            <div>@flight.FlightNumber</div>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <div>@flight.DepartureAirportCode (@flight.DepartureAirportName)</div>
+                            <strong>@flight.DepartureTime.ToString("HH:mm")</strong>
+                            <small>@flight.DepartureTime.ToString("MMM dd, yyyy")</small>
+                        </div>
+                        <div class="col-md-2 text-center text-muted">
+                            <i class="bi bi-arrow-right"></i>
+                            <div>@flight.Duration.Hours h @flight.Duration.Minutes m</div>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <div>@flight.ArrivalAirportCode (@flight.ArrivalAirportName)</div>
+                            <strong>@flight.ArrivalTime.ToString("HH:mm")</strong>
+                            <small>@flight.ArrivalTime.ToString("MMM dd, yyyy")</small>
+                        </div>
+                        <div class="col-md-2 text-center">
+                            <span class="h4 text-primary">@flight.Price.ToString("C")</span>
+                            <div><small>Seats: @flight.AvailableSeats</small></div>
+                            <a asp-controller="Booking" asp-action="BookFlight" asp-route-flightId="@flight.FlightId" class="btn btn-success btn-sm mt-2">Book Now</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}
+else if (Model.SearchResults != null && !ViewData.ModelState.IsValid) // <<< Change here
+{
+    <div class="alert alert-warning mt-5 text-center">
+        Please correct the errors in the search form.
+    </div>
+}
+else if (Model.SearchResults != null && ViewData.ModelState.IsValid && !Model.SearchResults.Any()) // <<< Change here
+{
+    <div class="alert alert-info mt-5 text-center">
+        No flights found for your selected criteria. Try a different search.
+    </div>
+}
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
