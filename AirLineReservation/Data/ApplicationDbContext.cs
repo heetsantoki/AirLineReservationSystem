@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using AirlineReservation.Models; // Ensure this is present
+using System.Collections.Generic; // For ICollection
 
 namespace AirlineReservation.Data
 {
@@ -11,24 +12,24 @@ namespace AirlineReservation.Data
         }
 
         public DbSet<User> Users { get; set; }
-        public DbSet<Airport> Airports { get; set; } // Add this
-        public DbSet<Flight> Flights { get; set; }   // Add this
-        // You'll add DbSet for Bookings later
+        public DbSet<Airport> Airports { get; set; }
+        public DbSet<Flight> Flights { get; set; }
+        // public DbSet<Booking> Bookings { get; set; } // Will add this later
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Define relationships (optional, EF Core often infers, but explicit is good)
+            // Define relationships for Flight and Airport
             modelBuilder.Entity<Flight>()
                 .HasOne(f => f.DepartureAirport)
                 .WithMany(a => a.DepartingFlights)
                 .HasForeignKey(f => f.DepartureAirportId)
-                .OnDelete(DeleteBehavior.Restrict); // Prevent cascading delete on airport if flights exist
+                .OnDelete(DeleteBehavior.Restrict); // Prevent cascading delete
 
             modelBuilder.Entity<Flight>()
                 .HasOne(f => f.ArrivalAirport)
                 .WithMany(a => a.ArrivingFlights)
                 .HasForeignKey(f => f.ArrivalAirportId)
-                .OnDelete(DeleteBehavior.Restrict); // Prevent cascading delete on airport if flights exist
+                .OnDelete(DeleteBehavior.Restrict); // Prevent cascading delete
 
             base.OnModelCreating(modelBuilder);
         }

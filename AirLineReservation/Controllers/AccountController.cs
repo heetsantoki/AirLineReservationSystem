@@ -1,13 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using AirlineReservation.ViewModels; // Adjusted to ViewModels folder
 using AirlineReservation.Data;
-using AirlineReservation.Models; // For the User model
-using System.Security.Claims; // For ClaimsIdentity
-using Microsoft.AspNetCore.Authentication; // For HttpContext.SignInAsync
-using Microsoft.AspNetCore.Authentication.Cookies; // For CookieAuthenticationDefaults
-using Microsoft.EntityFrameworkCore; // For .FirstOrDefaultAsync(), .AnyAsync()
-using System.Threading.Tasks; // For async/await
+using AirlineReservation.Models;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 using System;
-using AirLineReservation.ViewModel; // For DateTime
+using System.Collections.Generic; // For List<Claim>
 
 namespace AirlineReservation.Controllers
 {
@@ -45,7 +46,7 @@ namespace AirlineReservation.Controllers
                         {
                             new Claim(ClaimTypes.Name, user.Username),
                             new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
-                            new Claim(ClaimTypes.Email, user.Email) // Adding email claim
+                            new Claim(ClaimTypes.Email, user.Email)
                             // Add other claims like role if you have them in your User model
                         };
 
@@ -68,7 +69,7 @@ namespace AirlineReservation.Controllers
                         }
                         else
                         {
-                            return RedirectToAction("Index", "Home"); // Redirect to home page after login
+                            return RedirectToAction("Index", "Home");
                         }
                     }
                 }
@@ -89,7 +90,6 @@ namespace AirlineReservation.Controllers
         {
             if (ModelState.IsValid)
             {
-                // Check if username or email already exists
                 if (await _context.Users.AnyAsync(u => u.Username == model.Username))
                 {
                     ModelState.AddModelError(nameof(model.Username), "Username is already taken.");
@@ -102,14 +102,14 @@ namespace AirlineReservation.Controllers
                 }
 
                 // !!! IMPORTANT: Hash the password before saving it to the database!
-                // For a real application, you would use a library like BCrypt.Net:
+                // For a real application, use a library like BCrypt.Net:
                 // var hashedPassword = BCrypt.Net.BCrypt.HashPassword(model.Password);
                 var newUser = new User
                 {
                     Username = model.Username,
                     Email = model.Email,
                     PasswordHash = model.Password, // TEMPORARY: DO NOT USE IN PRODUCTION, STORE HASHED PASSWORD
-                    RegistrationDate = DateTime.UtcNow // Ensure this property exists in your User model
+                    RegistrationDate = DateTime.UtcNow
                 };
 
                 _context.Add(newUser);
@@ -126,13 +126,13 @@ namespace AirlineReservation.Controllers
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return RedirectToAction("Index", "Home"); // Redirect to home page after logout
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpGet]
         public IActionResult AccessDenied()
         {
-            return View(); // You'd create an AccessDenied.cshtml view for this
+            return View();
         }
     }
 }

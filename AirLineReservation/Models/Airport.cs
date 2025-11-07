@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic; // For ICollection
+using System.ComponentModel.DataAnnotations;
 
 namespace AirlineReservation.Models
 {
@@ -22,8 +23,8 @@ namespace AirlineReservation.Models
         [StringLength(50)]
         public string Country { get; set; }
 
-        // Navigation property for flights
-        public ICollection<Flight> DepartingFlights { get; set; }
-        public ICollection<Flight> ArrivingFlights { get; set; }
+        // Navigation properties for flights
+        public ICollection<Flight> DepartingFlights { get; set; } = new List<Flight>();
+        public ICollection<Flight> ArrivingFlights { get; set; } = new List<Flight>();
     }
 }

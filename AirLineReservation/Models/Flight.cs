@@ -1,6 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema; // For ForeignKey attribute
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AirlineReservation.Models
 {
@@ -12,14 +12,13 @@ namespace AirlineReservation.Models
         [StringLength(10)] // e.g., AA100, BA245
         public string FlightNumber { get; set; }
 
-        // Foreign keys for Airport
         public int DepartureAirportId { get; set; }
         [ForeignKey("DepartureAirportId")]
-        public Airport DepartureAirport { get; set; }
+        public Airport DepartureAirport { get; set; } // Navigation property
 
         public int ArrivalAirportId { get; set; }
         [ForeignKey("ArrivalAirportId")]
-        public Airport ArrivalAirport { get; set; }
+        public Airport ArrivalAirport { get; set; } // Navigation property
 
         [Required]
         public DateTime DepartureTime { get; set; }

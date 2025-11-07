@@ -1,9 +1,19 @@
-using AirlineReservation.Data;       // Add this line, assuming your DbContext is in Data folder
+using Microsoft.EntityFrameworkCore;
+using AirlineReservation.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.EntityFrameworkCore; // Add this line at the top
+using System; // For TimeSpan
 
-var builder = WebApplication.CreateBuilder(args); 
+var builder = WebApplication.CreateBuilder(args);
 
+// Add services to the container.
+builder.Services.AddControllersWithViews();
+
+// Database Configuration for SQL Server LocalDB
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
+);
+
+// Authentication Configuration
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
@@ -13,17 +23,6 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.SlidingExpiration = true; // Reset expiration on activity
     });
 builder.Services.AddAuthorization(); // Required for authorization
-
-// Add services to the container.
-builder.Services.AddControllersWithViews();
-
-// INSERT THE DATABASE CONFIGURATION HERE
-
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
-);
-
-// END OF DATABASE CONFIGURATION
 
 var app = builder.Build();
 
@@ -39,7 +38,9 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-app.UseAuthentication(); // Must be before UseAuthorization
+
+// Authentication middleware must be placed after UseRouting and before UseAuthorization
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

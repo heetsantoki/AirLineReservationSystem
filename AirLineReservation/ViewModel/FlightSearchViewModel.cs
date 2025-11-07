@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic; // For List
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering; // For SelectListItem
+using System.Linq; // For .Any()
 
-namespace AirLineReservation.ViewModel
+namespace AirlineReservation.ViewModels
 {
     public class FlightSearchViewModel
     {
@@ -27,7 +29,7 @@ namespace AirLineReservation.ViewModel
         public List<FlightResultViewModel> SearchResults { get; set; } = new List<FlightResultViewModel>();
 
         // Optional: For dropdown lists of airports (if you choose that UI approach)
-        public IEnumerable<SelectListItem> AvailableAirports { get; set; }
+        public IEnumerable<SelectListItem> AvailableAirports { get; set; } = Enumerable.Empty<SelectListItem>();
     }
 
     public class FlightResultViewModel

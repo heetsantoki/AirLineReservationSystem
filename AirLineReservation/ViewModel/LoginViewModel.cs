@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace AirLineReservation.ViewModel
+namespace AirlineReservation.ViewModels
 {
     public class LoginViewModel
     {
