@@ -13,6 +13,8 @@ builder.Services.AddControllersWithViews();
 // DbContext (SQL Server / LocalDB)
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddHttpContextAccessor();
+
 
 // Antiforgery cookie -> secure + same-site
 builder.Services.AddAntiforgery(options =>

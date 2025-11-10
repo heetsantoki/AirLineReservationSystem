@@ -63,12 +63,10 @@ namespace AirLineReservation.Controllers
             return RedirectToAction("Index", "Home"); // ✅ Redirect to Home after successful login
         }
 
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpGet]
         public async Task<IActionResult> Logout()
         {
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            await HttpContext.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
 

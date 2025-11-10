@@ -95,6 +95,31 @@ namespace AirLineReservation.Controllers
 
             return View("Success", booking);
         }
+        [Authorize]
+        public IActionResult MyBookings()
+        {
+            var userId = int.Parse(User.Claims.First(c => c.Type == "UserId").Value);
+
+            var bookings = _context.Bookings
+                .Where(b => b.UserId == userId)
+                .Join(_context.Flights,
+                    b => b.FlightId,
+                    f => f.Id,
+                    (b, f) => new MyBookingsViewModel
+                    {
+                        BookingId = b.Id,
+                        PassengerName = b.PassengerName,
+                        Airline = f.Airline,
+                        FlightNumber = f.FlightNumber,
+                        From = f.From,
+                        To = f.To,
+                        DepartureTime = f.DepartureTime,
+                        ArrivalTime = f.ArrivalTime,
+                        Price = b.Price
+                    }).ToList();
+
+            return View(bookings);
+        }
 
     }
 }

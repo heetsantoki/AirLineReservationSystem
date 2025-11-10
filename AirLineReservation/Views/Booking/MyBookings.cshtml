@@ -1,34 +1,30 @@
-﻿@model IEnumerable<AirLineReservation.Models.Booking>
+﻿@model IEnumerable<AirLineReservation.ViewModel.MyBookingsViewModel>
 
-<h2>My Bookings</h2>
+<h2 class="mb-4 text-center">My Bookings</h2>
 
-<table class="table table-bordered">
-    <thead>
+<table class="table table-bordered table-striped">
+    <thead class="table-primary">
         <tr>
+            <th>Passenger</th>
             <th>Airline</th>
             <th>Flight</th>
             <th>Route</th>
             <th>Departure</th>
             <th>Arrival</th>
-            <th>Passengers</th>
-            <th>Fare</th>
             <th>Price (₹)</th>
-            <th>Booked On</th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var b in Model)
+        @foreach (var item in Model)
         {
             <tr>
-                <td>@b.Flight.Airline</td>
-                <td>@b.Flight.FlightNumber</td>
-                <td>@b.Flight.From → @b.Flight.To</td>
-                <td>@b.Flight.DepartureTime.ToString("dd MMM, hh:mm tt")</td>
-                <td>@b.Flight.ArrivalTime.ToString("dd MMM, hh:mm tt")</td>
-                <td>@b.Passengers</td>
-                <td>@b.FareType</td>
-                <td>@b.Price</td>
-                <td>@b.CreatedAt.ToString("dd MMM yyyy")</td>
+                <td>@item.PassengerName</td>
+                <td>@item.Airline</td>
+                <td>@item.FlightNumber</td>
+                <td>@item.From → @item.To</td>
+                <td>@item.DepartureTime.ToString("dd MMM, hh:mm tt")</td>
+                <td>@item.ArrivalTime.ToString("dd MMM, hh:mm tt")</td>
+                <td>@item.Price</td>
             </tr>
         }
     </tbody>
