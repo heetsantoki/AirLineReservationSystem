@@ -1,25 +1,23 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace AirlineReservation.Models
+namespace AirLineReservation.Models
 {
     public class User
     {
-        public int UserId { get; set; }
+        public int Id { get; set; }
 
-        [Required]
-        [StringLength(50)]
-        public string Username { get; set; }
+        [Required, StringLength(100)]
+        public string Name { get; set; }  // ✅ Must match DB column
 
-        [Required]
-        [StringLength(255)] // Store hashed passwords
-        public string PasswordHash { get; set; }
-
-        [Required]
-        [EmailAddress]
-        [StringLength(100)]
+        [Required, EmailAddress]
         public string Email { get; set; }
 
-        public DateTime RegistrationDate { get; set; } = DateTime.UtcNow; // Default to current UTC time
+        [Required]
+        public string PasswordHash { get; set; }
+
+        public string Role { get; set; } = "User";
+
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }

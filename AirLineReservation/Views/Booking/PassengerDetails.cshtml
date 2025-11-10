@@ -1,0 +1,26 @@
+﻿@model AirLineReservation.ViewModel.BookingViewModel
+
+<h2>Passenger Details</h2>
+
+<form asp-action="Confirm" method="post">
+
+    <input type="hidden" asp-for="FlightId" />
+
+    <label>Passenger Name</label>
+    <input asp-for="PassengerName" class="form-control" required />
+
+    <label>Passenger Age</label>
+    <input asp-for="PassengerAge" type="number" class="form-control" required />
+
+    <label>Gender</label>
+    <select asp-for="Gender" class="form-control">
+        <option>Male</option>
+        <option>Female</option>
+        <option>Other</option>
+    </select>
+
+    <label>Passengers</label>
+    <input asp-for="Passengers" type="number" min="1" value="1" class="form-control" required />
+
+    <button class="btn btn-success mt-3">Continue</button>
+</form>

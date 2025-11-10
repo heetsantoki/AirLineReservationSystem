@@ -1,45 +1,67 @@
-using Microsoft.EntityFrameworkCore;
-using AirlineReservation.Data;
+﻿using System;
+using AirLineReservation.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using System; // For TimeSpan
+using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Antiforgery;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// MVC
 builder.Services.AddControllersWithViews();
 
-// Database Configuration for SQL Server LocalDB
+// DbContext (SQL Server / LocalDB)
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
-);
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Authentication Configuration
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+// Antiforgery cookie -> secure + same-site
+builder.Services.AddAntiforgery(options =>
+{
+    options.Cookie.Name = ".AirLineReservation.AntiForgery";
+    options.Cookie.SameSite = SameSiteMode.Lax;     // good default for normal forms
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // send only on HTTPS
+});
+
+// Auth cookies
+builder.Services
+    .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
-        options.LoginPath = "/Account/Login"; // Redirect to this path if not authenticated
-        options.AccessDeniedPath = "/Account/AccessDenied"; // Redirect if unauthorized
-        options.ExpireTimeSpan = TimeSpan.FromMinutes(30); // Cookie expiration
-        options.SlidingExpiration = true; // Reset expiration on activity
+        options.Cookie.Name = ".AirLineReservation.Auth";
+        options.Cookie.HttpOnly = true;
+        options.Cookie.SameSite = SameSiteMode.Lax;          // prevents cross-site posting issues
+        options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // only over HTTPS
+        options.LoginPath = "/Account/Login";
+        options.AccessDeniedPath = "/Account/AccessDenied";
+        options.ExpireTimeSpan = TimeSpan.FromDays(7);
+        options.SlidingExpiration = true;
+
+        // If you want to keep the original returnUrl behavior:
+        options.ReturnUrlParameter = "returnUrl";
     });
-builder.Services.AddAuthorization(); // Required for authorization
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Error handling + HSTS in production
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
+    app.UseHsts(); // adds Strict-Transport-Security
 }
 
+// Always redirect HTTP -> HTTPS (fixes the console warning)
 app.UseHttpsRedirection();
+
 app.UseStaticFiles();
 
 app.UseRouting();
 
-// Authentication middleware must be placed after UseRouting and before UseAuthorization
+// If hosted behind a proxy/HTTPS terminator, uncomment:
+// app.UseForwardedHeaders(new ForwardedHeadersOptions
+// {
+//     ForwardedHeaders = ForwardedHeaders.XForwardedProto
+// });
+
 app.UseAuthentication();
 app.UseAuthorization();
 

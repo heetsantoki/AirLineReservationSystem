@@ -1,0 +1,35 @@
+﻿@model IEnumerable<AirLineReservation.Models.Booking>
+
+<h2>My Bookings</h2>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Airline</th>
+            <th>Flight</th>
+            <th>Route</th>
+            <th>Departure</th>
+            <th>Arrival</th>
+            <th>Passengers</th>
+            <th>Fare</th>
+            <th>Price (₹)</th>
+            <th>Booked On</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var b in Model)
+        {
+            <tr>
+                <td>@b.Flight.Airline</td>
+                <td>@b.Flight.FlightNumber</td>
+                <td>@b.Flight.From → @b.Flight.To</td>
+                <td>@b.Flight.DepartureTime.ToString("dd MMM, hh:mm tt")</td>
+                <td>@b.Flight.ArrivalTime.ToString("dd MMM, hh:mm tt")</td>
+                <td>@b.Passengers</td>
+                <td>@b.FareType</td>
+                <td>@b.Price</td>
+                <td>@b.CreatedAt.ToString("dd MMM yyyy")</td>
+            </tr>
+        }
+    </tbody>
+</table>

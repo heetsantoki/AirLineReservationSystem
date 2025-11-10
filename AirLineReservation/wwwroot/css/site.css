@@ -1,22 +1,86 @@
-html {
-  font-size: 14px;
-}
-
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
+:root {
+    --brand: #0033A0;
+    --accent: #6C63FF;
+    --cta: #00AEEF;
+    --muted: #6b7280;
+    --radius: 12px;
+    --font: "Poppins", sans-serif;
 }
 
 body {
-  margin-bottom: 60px;
+    font-family: var(--font);
+    background: #f7f9fc;
+    color: #111827;
+}
+
+/* Brand box */
+.brand-box {
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    background: linear-gradient(135deg,var(--brand),var(--accent));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.brand-inside {
+    color: white;
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+/* Hero */
+.site-hero {
+    background: linear-gradient(180deg, rgba(0,51,160,0.06), transparent 70%);
+}
+
+.hero-card {
+    border-radius: var(--radius);
+}
+
+/* Form controls with brand focus */
+.form-control:focus {
+    box-shadow: 0 0 0 .2rem rgba(0,51,160,0.12);
+    border-color: var(--brand);
+}
+
+/* CTA buttons */
+.btn-primary {
+    background: linear-gradient(90deg,var(--brand),var(--accent));
+    border: none;
+    box-shadow: 0 6px 18px rgba(12,36,99,0.12);
+}
+
+    .btn-primary:hover {
+        filter: saturate(1.05) brightness(1.01);
+    }
+
+/* Flight card */
+.flight-card {
+    border-radius: 12px;
+    background: white;
+    padding: 16px;
+    transition: transform .14s ease, box-shadow .14s ease;
+}
+
+    .flight-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 12px 30px rgba(12,36,99,0.08);
+    }
+
+.flight-meta {
+    font-size: 0.85rem;
+    color: var(--muted);
+}
+
+/* Responsive tweaks */
+@media (max-width:767px) {
+    .site-hero {
+        padding: 2rem 0;
+    }
+
+    .brand-text small {
+        display: none;
+    }
 }

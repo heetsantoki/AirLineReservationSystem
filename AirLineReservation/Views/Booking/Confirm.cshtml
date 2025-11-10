@@ -1,0 +1,19 @@
+﻿@model AirLineReservation.ViewModel.BookingViewModel
+
+<h3 class="mt-4">Confirm Booking</h3>
+
+<p><strong>Passenger:</strong> @Model.PassengerName (@Model.Gender, @Model.PassengerAge)</p>
+<p><strong>Flight:</strong> @Model.Airline - @Model.FlightNumber</p>
+<p><strong>Route:</strong> @Model.From → @Model.To</p>
+<p><strong>Price:</strong> ₹@Model.Price</p>
+
+<form method="post" asp-action="ConfirmBooking">
+    <input type="hidden" asp-for="FlightId" />
+    <input type="hidden" asp-for="PassengerName" />
+    <input type="hidden" asp-for="PassengerAge" />
+    <input type="hidden" asp-for="Gender" />
+    <input type="hidden" asp-for="Passengers" />
+    <input type="hidden" asp-for="Price" />
+
+    <button class="btn btn-primary">Book Now</button>
+</form>

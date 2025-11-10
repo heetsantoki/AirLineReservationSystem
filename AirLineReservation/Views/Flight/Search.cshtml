@@ -1,0 +1,61 @@
+﻿@model List<AirLineReservation.Models.Flight>
+
+@{
+    ViewData["Title"] = "Available Flights";
+}
+
+<div class="container mt-5">
+
+    <h2 class="text-center mb-4 text-primary fw-bold">
+        Available Flights from @Context.Request.Query["from"] to @Context.Request.Query["to"]
+    </h2>
+
+    @if (Model.Count == 0)
+    {
+        <div class="alert alert-warning text-center">
+            No flights available. Try different date or route.
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var f in Model)
+            {
+                <div class="col-md-6 mb-4">
+                    <div class="card p-3 shadow-sm rounded-4 border-0 flight-card">
+
+                        <div class="d-flex justify-content-between">
+                            <h5 class="fw-bold text-primary">@f.Airline (@f.FlightNumber)</h5>
+                            <span class="badge bg-success">₹@f.Price</span>
+                        </div>
+
+                        <div class="mt-2">
+                            <p class="m-0"><strong>@f.From</strong> → <strong>@f.To</strong></p>
+                            <p class="text-muted small m-0">
+                                Departs: @f.DepartureTime.ToString("dd MMM, hh:mm tt")
+                                <br />
+                                Arrives: @f.ArrivalTime.ToString("dd MMM, hh:mm tt")
+                            </p>
+                        </div>
+
+                        <div class="text-end mt-3">
+                            <a asp-controller="Booking" asp-action="Book" asp-route-id="@f.Id"
+                               class="btn btn-primary rounded-pill px-4">
+                                Book Now
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+<style>
+    .flight-card:hover {
+        transform: translateY(-4px);
+        transition: 0.3s;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    }
+</style>

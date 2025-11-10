@@ -1,17 +1,15 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace AirlineReservation.ViewModels
+namespace AirLineReservation.ViewModel
 {
     public class LoginViewModel
     {
-        [Required(ErrorMessage = "Username is required.")]
-        public string Username { get; set; }
+        [Required, EmailAddress]
+        public string Email { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "Password is required.")]
-        [DataType(DataType.Password)]
-        public string Password { get; set; }
+        [Required, DataType(DataType.Password)]
+        public string Password { get; set; } = string.Empty;
 
-        [Display(Name = "Remember Me")]
-        public bool RememberMe { get; set; }
+        public bool RememberMe { get; set; } = true;
     }
 }

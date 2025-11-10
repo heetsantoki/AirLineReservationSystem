@@ -1,0 +1,60 @@
+﻿@model AirLineReservation.ViewModel.SearchResultsModel
+
+@{
+    ViewData["Title"] = "Available Flights";
+}
+
+<div class="container mt-5">
+
+    <h2 class="text-center fw-bold mb-3">
+        Available Flights from @Model.From to @Model.To
+    </h2>
+
+    <p class="text-center text-muted">
+        Date: <strong>@Model.Date</strong> • Passengers: <strong>@Model.Passengers</strong>
+    </p>
+
+    @if (Model.Flights == null || !Model.Flights.Any())
+    {
+        <div class="alert alert-warning text-center mt-4">
+            No flights available. Try a different date or route.
+        </div>
+    }
+    else
+    {
+        <table class="table table-bordered table-striped shadow mt-4">
+            <thead class="table-primary">
+                <tr>
+                    <th>Airline</th>
+                    <th>Flight No</th>
+                    <th>Departure</th>
+                    <th>Arrival</th>
+                    <th>Price (₹)</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var flight in Model.Flights)
+                {
+                    <tr>
+                        <td>@flight.Airline</td>
+                        <td>@flight.FlightNumber</td>
+                        <td>@flight.DepartureTime.ToString("dd MMM, hh:mm tt")</td>
+                        <td>@flight.ArrivalTime.ToString("dd MMM, hh:mm tt")</td>
+                        <td>@flight.Price</td>
+                        <td>
+                            <a asp-controller="Booking"
+                               asp-action="Select"
+                               asp-route-id="@flight.Id"
+                               asp-route-passengers="@Model.Passengers"
+                               asp-route-date="@Model.Date"
+                               class="btn btn-success btn-sm rounded-pill px-3">
+                                Book
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>

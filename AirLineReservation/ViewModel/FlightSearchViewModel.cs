@@ -1,38 +1,13 @@
-﻿using System;
-using System.Collections.Generic; // For List
-using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Mvc.Rendering; // For SelectListItem
-using System.Linq; // For .Any()
+﻿// File: YourProjectName/ViewModels/FlightSearchViewModel.cs
 
-namespace AirlineReservation.ViewModels
+using System;
+using System.ComponentModel.DataAnnotations;
+using AirLineReservation.ViewModel;
+using Microsoft.AspNetCore.Mvc.Rendering; // Good for validation attributes
+
+namespace AirlineReservation.ViewModel // Adjust your namespace
 {
     public class FlightSearchViewModel
-    {
-        [Required(ErrorMessage = "Departure airport is required.")]
-        [Display(Name = "From")]
-        public string DepartureAirportIATA { get; set; }
-
-        [Required(ErrorMessage = "Arrival airport is required.")]
-        [Display(Name = "To")]
-        public string ArrivalAirportIATA { get; set; }
-
-        [Required(ErrorMessage = "Departure date is required.")]
-        [DataType(DataType.Date)]
-        [Display(Name = "Departure Date")]
-        public DateTime DepartureDate { get; set; }
-
-        [Range(1, 9, ErrorMessage = "Number of passengers must be between 1 and 9.")]
-        [Display(Name = "Passengers")]
-        public int NumberOfPassengers { get; set; } = 1; // Default to 1 passenger
-
-        // Property to hold search results
-        public List<FlightResultViewModel> SearchResults { get; set; } = new List<FlightResultViewModel>();
-
-        // Optional: For dropdown lists of airports (if you choose that UI approach)
-        public IEnumerable<SelectListItem> AvailableAirports { get; set; } = Enumerable.Empty<SelectListItem>();
-    }
-
-    public class FlightResultViewModel
     {
         public int FlightId { get; set; }
         public string FlightNumber { get; set; }
@@ -42,9 +17,33 @@ namespace AirlineReservation.ViewModels
         public string ArrivalAirportCode { get; set; }
         public string ArrivalAirportName { get; set; }
         public DateTime DepartureTime { get; set; }
+        public DateTime DepartureDate { get; set; }
         public DateTime ArrivalTime { get; set; }
-        public TimeSpan Duration => ArrivalTime - DepartureTime;
         public decimal Price { get; set; }
         public int AvailableSeats { get; set; }
+        public int NumberOfPassengers { get; set; }
+
+
+        [Required(ErrorMessage = "Departure airport is required.")]
+        [StringLength(3, MinimumLength = 3, ErrorMessage = "IATA code must be 3 characters.")]
+        [Display(Name = "From (IATA Code)")]
+        public string DepartureAirportIATA { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Arrival airport is required.")]
+        [StringLength(3, MinimumLength = 3, ErrorMessage = "IATA code must be 3 characters.")]
+        [Display(Name = "To (IATA Code)")]
+        public string ArrivalAirportIATA { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Departure date is required.")]
+        [DataType(DataType.Date)]
+
+        [Range(1, 9, ErrorMessage = "Number of passengers must be between 1 and 9.")]
+        public List<SelectListItem>? AvailableAirports { get; set; } // ✅ add this if missing.
+        public List<FlightResultViewModel>? SearchResults { get; set; }
+
+
+
+        // You might have other properties here, like:
+        // public string FlightClass { get; set; } // Economy, Business, First
     }
 }

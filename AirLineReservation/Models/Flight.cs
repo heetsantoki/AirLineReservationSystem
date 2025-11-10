@@ -1,39 +1,28 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
-namespace AirlineReservation.Models
+namespace AirLineReservation.Models
 {
     public class Flight
     {
-        public int FlightId { get; set; }
+        public int Id { get; set; }
 
         [Required]
-        [StringLength(10)] // e.g., AA100, BA245
-        public string FlightNumber { get; set; }
-
-        public int DepartureAirportId { get; set; }
-        [ForeignKey("DepartureAirportId")]
-        public Airport DepartureAirport { get; set; } // Navigation property
-
-        public int ArrivalAirportId { get; set; }
-        [ForeignKey("ArrivalAirportId")]
-        public Airport ArrivalAirport { get; set; } // Navigation property
+        public string Airline { get; set; } = "";
 
         [Required]
+        public string FlightNumber { get; set; } = "";
+
+        [Required]
+        public string From { get; set; } = "";
+
+        [Required]
+        public string To { get; set; } = "";
+
         public DateTime DepartureTime { get; set; }
-
-        [Required]
         public DateTime ArrivalTime { get; set; }
 
-        [Required]
-        [Column(TypeName = "decimal(18, 2)")] // Stores price with 2 decimal places
-        public decimal Price { get; set; }
-
-        public int AvailableSeats { get; set; }
-
-        [Required]
-        [StringLength(50)]
-        public string Airline { get; set; }
+        public double Price { get; set; }
+        public bool IsActive { get; set; } = true;
     }
 }

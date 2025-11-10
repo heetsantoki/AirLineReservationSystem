@@ -1,0 +1,38 @@
+﻿@model AirLineReservation.ViewModel.BookingViewModel
+@{
+    ViewData["Title"] = "Confirm Your Booking";
+}
+
+<h2 class="mb-4">Confirm Your Booking</h2>
+
+<div class="card p-4 shadow-sm">
+    <p><strong>Flight:</strong> @Model.FlightNumber (@Model.Airline)</p>
+    <p><strong>Route:</strong> @Model.From → @Model.To</p>
+    <p><strong>Departure:</strong> @Model.DepartureTime</p>
+    <p><strong>Arrival:</strong> @Model.ArrivalTime</p>
+    <p><strong>Price per Passenger:</strong> ₹@Model.Price</p>
+</div>
+
+<hr />
+
+<form asp-action="Confirm" method="post">
+    <input type="hidden" asp-for="FlightId" />
+
+    <label>Passenger Name</label>
+    <input asp-for="PassengerName" class="form-control" required />
+
+    <label>Passenger Age</label>
+    <input asp-for="PassengerAge" type="number" class="form-control" required />
+
+    <label>Gender</label>
+    <select asp-for="Gender" class="form-control" required>
+        <option>Male</option>
+        <option>Female</option>
+        <option>Other</option>
+    </select>
+
+    <label>Passengers</label>
+    <input asp-for="Passengers" type="number" min="1" class="form-control" required />
+
+    <button class="btn btn-success mt-3">Confirm Booking</button>
+</form>
