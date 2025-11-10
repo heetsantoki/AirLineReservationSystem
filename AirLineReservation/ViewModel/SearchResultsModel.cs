@@ -12,6 +12,6 @@ namespace AirLineReservation.ViewModel
         public string Date { get; set; }
         public int Passengers { get; set; }
 
-        public IEnumerable<Flight> Flights { get; set; } // ✅ Must be Flight, not FlightViewModel
+        public IEnumerable<Flight> Flights { get; set; } 
     }
 }

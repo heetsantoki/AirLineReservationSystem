@@ -1,23 +1,49 @@
-﻿using System.Security.Claims;
+﻿using AirLineReservation.Data;
+using AirLineReservation.Models;
+using Microsoft.AspNetCore.Mvc;
+using System.Linq;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using AirLineReservation.Data;
-using AirLineReservation.Models;     // your User entity
-using AirLineReservation.ViewModel; // LoginViewModel
+using AirLineReservation.ViewModel;
 
 namespace AirLineReservation.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly ApplicationDbContext _db;
+        private readonly ApplicationDbContext _context;
 
-        public AccountController(ApplicationDbContext db)
+        public AccountController(ApplicationDbContext context)
         {
-            _db = db;
+            _context = context;
         }
 
+        // --- REGISTER (GET) ---
+        [HttpGet]
+        public IActionResult Register()
+        {
+            return View();
+        }
+
+        // --- REGISTER (POST) ---
+        [HttpPost]
+        public IActionResult Register(User model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+
+            if (_context.Users.Any(x => x.Email == model.Email))
+            {
+                ModelState.AddModelError("", "This email is already registered.");
+                return View(model);
+            }
+            model.PasswordHash = BCrypt.Net.BCrypt.HashPassword(model.PasswordHash);
+
+            _context.Users.Add(model);
+            _context.SaveChanges();
+
+            return RedirectToAction("Login");
+        }
         [HttpGet]
         public IActionResult Login(string? returnUrl = null)
         {
@@ -32,7 +58,7 @@ namespace AirLineReservation.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
-            var user = _db.Users.FirstOrDefault(u => u.Email == model.Email);
+            var user = _context.Users.FirstOrDefault(u => u.Email == model.Email);
 
             if (user == null)
             {

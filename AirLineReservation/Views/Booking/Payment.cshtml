@@ -1,0 +1,97 @@
+﻿@model AirLineReservation.ViewModel.PaymentViewModel
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+<style>
+    .payment-page {
+        min-height: calc(100vh - 70px);
+        background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 60px 0;
+    }
+
+    .payment-card {
+        background: #ffffffee;
+        border-radius: 18px;
+        padding: 35px;
+        width: 420px;
+        box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.25);
+        backdrop-filter: blur(10px);
+        animation: fadeIn 0.5s ease-in-out;
+    }
+
+    @@keyframes fadeIn {
+        from
+
+    {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    }
+
+    .btn-pay {
+        background: #28a745;
+        border: none;
+        width: 100%;
+        padding: 12px;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: 0.3s;
+    }
+
+        .btn-pay:hover {
+            background: #1e8c37;
+            transform: scale(1.03);
+        }
+</style>
+
+
+<div class="payment-page">
+    <div class="payment-card">
+        <h4 class="text-center mb-4"><i class="bi bi-shield-lock-fill text-primary"></i> Secure Payment</h4>
+
+        <p><strong>Passenger:</strong> @Model.PassengerName</p>
+        <p><strong>Passengers:</strong> @Model.Passengers</p>
+        <p><strong>Total Price:</strong> <span class="text-success fw-bold">₹@Model.Price</span></p>
+        <hr />
+
+        <form asp-action="Payment" method="post">
+            @Html.AntiForgeryToken()
+
+            <input type="hidden" asp-for="FlightId" />
+            <input type="hidden" asp-for="Passengers" />
+            <input type="hidden" asp-for="PassengerName" />
+            <input type="hidden" asp-for="PassengerAge" />
+            <input type="hidden" asp-for="Gender" />
+            <input type="hidden" asp-for="Price" />
+
+            <label class="form-label">Card Holder Name</label>
+            <input asp-for="CardHolder" class="form-control mb-2" placeholder="John Doe" required />
+
+            <label class="form-label mt-2">Card Number</label>
+            <input asp-for="CardNumber" class="form-control mb-2" maxlength="16" placeholder="1234 5678 9012 3456" required />
+
+            <div class="row">
+                <div class="col-6">
+                    <label class="form-label mt-2">Expiry (MM/YY)</label>
+                    <input asp-for="Expiry" class="form-control" placeholder="08/27" required />
+                </div>
+                <div class="col-6">
+                    <label class="form-label mt-2">CVV</label>
+                    <input asp-for="Cvv" class="form-control" maxlength="3" required />
+                </div>
+            </div>
+
+            <button type="submit" class="btn-pay mt-4">
+                <i class="bi bi-shield-check"></i> Pay ₹@Model.Price
+            </button>
+        </form>
+    </div>
+</div>

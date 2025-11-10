@@ -15,5 +15,8 @@ namespace AirLineReservation.ViewModel
 
         [Range(1, 9)]
         public int Passengers { get; set; } = 1;
+        public string From { get; set; }
+        public string To { get; set; }
+        public DateTime TravelDate { get; set; }
     }
 }

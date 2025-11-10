@@ -1,38 +1,119 @@
 ﻿@model AirLineReservation.ViewModel.BookingViewModel
-@{
-    ViewData["Title"] = "Confirm Your Booking";
-}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
-<h2 class="mb-4">Confirm Your Booking</h2>
+<style>
+    .confirm-page {
+        min-height: calc(100vh - 70px);
+        background: linear-gradient(135deg, #4b79f8 0%, #c471ed 50%, #fddb92 100%);
+        padding: 50px 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 
-<div class="card p-4 shadow-sm">
-    <p><strong>Flight:</strong> @Model.FlightNumber (@Model.Airline)</p>
-    <p><strong>Route:</strong> @Model.From → @Model.To</p>
-    <p><strong>Departure:</strong> @Model.DepartureTime</p>
-    <p><strong>Arrival:</strong> @Model.ArrivalTime</p>
-    <p><strong>Price per Passenger:</strong> ₹@Model.Price</p>
+    .confirm-card {
+        background: #ffffffdd;
+        backdrop-filter: blur(12px);
+        padding: 35px;
+        border-radius: 18px;
+        width: 650px;
+        box-shadow: 0 12px 35px rgba(0,0,0,0.25);
+        animation: showUp 0.5s ease-in-out;
+    }
+
+    @@keyframes showUp {
+        from
+
+    {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    }
+
+    .flight-info {
+        background: #fff;
+        padding: 18px;
+        border-radius: 14px;
+        margin-bottom: 25px;
+        border-left: 5px solid #007bff;
+    }
+
+    .btn-main {
+        background: #007bff;
+        border: none;
+        padding: 12px;
+        border-radius: 10px;
+        width: 100%;
+        font-weight: 600;
+        transition: 0.3s;
+        font-size: 17px;
+        margin-top: 10px;
+        color: white;
+    }
+
+        .btn-main:hover {
+            background: #0056d6;
+            transform: scale(1.03);
+        }
+</style>
+
+
+<div class="confirm-page">
+    <div class="confirm-card">
+
+        <h3 class="text-center mb-4">
+            <i class="bi bi-person-check-fill text-primary"></i> Confirm Your Booking
+        </h3>
+
+        <div class="flight-info">
+            <p><strong>Flight:</strong> @Model.FlightNumber (@Model.Airline)</p>
+            <p><strong>Route:</strong> @Model.From → @Model.To</p>
+            <p><strong>Departure:</strong> @Model.DepartureTime.ToString("dd-MM-yyyy hh:mm tt")</p>
+            <p><strong>Arrival:</strong> @Model.ArrivalTime.ToString("dd-MM-yyyy hh:mm tt")</p>
+            <p><strong>Price per Passenger:</strong> <span class="text-success fw-bold">₹@Model.Price</span></p>
+        </div>
+
+        <form asp-action="Confirm" asp-controller="Booking" method="post">
+            @Html.AntiForgeryToken()
+
+            <input type="hidden" asp-for="FlightId" />
+            <input type="hidden" asp-for="Price" />
+
+            <div class="mb-3">
+                <label class="form-label">Passenger Name</label>
+                <input asp-for="PassengerName" class="form-control" placeholder="Enter Full Name" required />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Passenger Age</label>
+                <input asp-for="PassengerAge" class="form-control" type="number" min="1" required />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Gender</label>
+                <select asp-for="Gender" class="form-control" required>
+                    <option value="">Select Gender</option>
+                    <option>Male</option>
+                    <option>Female</option>
+                    <option>Other</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Passengers</label>
+                <input asp-for="Passengers" class="form-control" type="number" min="1" required />
+            </div>
+
+            <button type="submit" class="btn-main">
+                <i class="bi bi-check-circle-fill"></i> Confirm Booking
+            </button>
+        </form>
+
+    </div>
 </div>
-
-<hr />
-
-<form asp-action="Confirm" method="post">
-    <input type="hidden" asp-for="FlightId" />
-
-    <label>Passenger Name</label>
-    <input asp-for="PassengerName" class="form-control" required />
-
-    <label>Passenger Age</label>
-    <input asp-for="PassengerAge" type="number" class="form-control" required />
-
-    <label>Gender</label>
-    <select asp-for="Gender" class="form-control" required>
-        <option>Male</option>
-        <option>Female</option>
-        <option>Other</option>
-    </select>
-
-    <label>Passengers</label>
-    <input asp-for="Passengers" type="number" min="1" class="form-control" required />
-
-    <button class="btn btn-success mt-3">Confirm Booking</button>
-</form>

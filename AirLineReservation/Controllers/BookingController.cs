@@ -17,7 +17,6 @@ namespace AirLineReservation.Controllers
             _context = context;
         }
 
-        // STEP 1: OPEN BOOK PAGE
         public IActionResult Select(int id)
         {
             var flight = _context.Flights.FirstOrDefault(f => f.Id == id);
@@ -38,13 +37,59 @@ namespace AirLineReservation.Controllers
             return View("Book", model);
         }
 
-        // STEP 2: CONFIRM BOOKING (Login Required)
         [HttpPost]
         [Authorize]
+        [ValidateAntiForgeryToken]
         public IActionResult Confirm(BookingViewModel model)
         {
-            if (!User.Identity.IsAuthenticated)
-                return RedirectToAction("Login", "Account");
+            if (!ModelState.IsValid)
+                return View("Book", model);
+
+            // ✅ Re-fetch flight price from DB to ensure correctness
+            var flight = _context.Flights.FirstOrDefault(f => f.Id == model.FlightId);
+            if (flight == null) return NotFound();
+
+            // ✅ Calculate total price
+            model.Price = (decimal)flight.Price * model.Passengers;
+
+            return RedirectToAction("Payment", new
+            {
+                flightId = model.FlightId,
+                price = model.Price,
+                passengerName = model.PassengerName,
+                passengerAge = model.PassengerAge,
+                gender = model.Gender,
+                passengers = model.Passengers
+            });
+        }
+
+
+        [HttpGet]
+        [Authorize]
+        public IActionResult Payment(int flightId, decimal price, string passengerName, int passengers, int passengerAge, string gender)
+        {
+            var vm = new PaymentViewModel
+            {
+                FlightId = flightId,
+                Price = price,
+                PassengerName = passengerName,
+                Passengers = passengers,
+                PassengerAge = passengerAge,
+                Gender = gender
+            };
+
+            return View(vm);
+        }
+
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public IActionResult Payment(PaymentViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
 
             int userId = int.Parse(User.Claims.First(c => c.Type == "UserId").Value);
 
@@ -56,7 +101,7 @@ namespace AirLineReservation.Controllers
                 PassengerAge = model.PassengerAge,
                 Gender = model.Gender,
                 Passengers = model.Passengers,
-                Price = model.Price
+                Price = model.Price * model.Passengers  
             };
 
             _context.Bookings.Add(booking);
@@ -65,8 +110,6 @@ namespace AirLineReservation.Controllers
             return RedirectToAction("Success", new { id = booking.Id });
         }
 
-
-        // STEP 3: SUCCESS PAGE
         public IActionResult Success(int id)
         {
             var booking = _context.Bookings
@@ -95,6 +138,7 @@ namespace AirLineReservation.Controllers
 
             return View("Success", booking);
         }
+
         [Authorize]
         public IActionResult MyBookings()
         {
@@ -120,6 +164,5 @@ namespace AirLineReservation.Controllers
 
             return View(bookings);
         }
-
     }
 }

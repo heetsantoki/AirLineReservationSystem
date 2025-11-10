@@ -23,7 +23,7 @@ namespace AirLineReservation.ViewModel
         public int PassengerAge { get; set; }
 
         [Required]
-        public string Gender { get; set; } = string.Empty;
+        public string Gender { get; set; } = "";
 
         [Required]
         public int Passengers { get; set; } = 1;
