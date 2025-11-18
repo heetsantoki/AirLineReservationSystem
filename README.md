@@ -2,16 +2,18 @@
 
 A simple Airline Reservation System built using ASP.NET and SQL Server.
 This project allows users to search flights, book tickets, make payments, and view booking details.
+
 <hr>
 
 <h2>⭐ Features</h2>
 
-User registration & login
-Search flights (source, destination, date)
-Book flight tickets
-Payment page with card validation
-Booking confirmation page
-Admin panel to manage flights & view bookings
+User registration & login<br>
+Search flights (source, destination, date)<br>
+Book flight tickets<br>
+Payment page with card validation<br>
+Booking confirmation page<br>
+Admin panel to manage flights & view bookings<br>
+
 <hr>
 
 
