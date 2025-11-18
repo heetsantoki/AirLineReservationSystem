@@ -7,13 +7,14 @@ This project allows users to search flights, book tickets, make payments, and vi
 
 <h2>⭐ Features</h2>
 
+<ul>
 User registration & login<br>
 Search flights (source, destination, date)<br>
 Book flight tickets<br>
 Payment page with card validation<br>
 Booking confirmation page<br>
 Admin panel to manage flights & view bookings<br>
-
+</ul>
 <hr>
 
 
