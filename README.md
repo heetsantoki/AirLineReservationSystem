@@ -50,7 +50,7 @@ ADO.NET
 
 <hr>
 
-<h2>📌 Purpose<h2>
+<h2>📌 Purpose</h2>
 
 Educational project demonstrating web development, CRUD operations, authentication, and airline booking workflow.
 
