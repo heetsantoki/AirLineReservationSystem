@@ -1,10 +1,10 @@
-<b>✈️ Airline Reservation System</b>
+<h2>✈️ Airline Reservation System</h2>
 
 A simple Airline Reservation System built using ASP.NET and SQL Server.
 This project allows users to search flights, book tickets, make payments, and view booking details.
 <hr>
 
-<b>⭐ Features</b>
+<h2>⭐ Features</h2>
 
 User registration & login
 Search flights (source, destination, date)
@@ -15,7 +15,7 @@ Admin panel to manage flights & view bookings
 <hr>
 
 
-<b>🛠️ Technologies</b>
+<h2>🛠️ Technologies</h2>
 
 ASP.NET (C#)
 
@@ -28,7 +28,7 @@ ADO.NET
 <hr>
 
 
-<b>🚀 How to Run</b>
+<h2>🚀 How to Run</h2>
 
 1. Clone the repo
 
@@ -42,7 +42,7 @@ ADO.NET
 
 <hr>
 
-<b>📌 Purpose<b>
+<h2>📌 Purpose<h2>
 
 Educational project demonstrating web development, CRUD operations, authentication, and airline booking workflow.
 
